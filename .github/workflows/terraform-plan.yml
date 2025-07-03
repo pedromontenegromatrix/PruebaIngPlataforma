@@ -12,7 +12,7 @@ env:
 
 jobs:
   terraform:
-    if: github.repository != 'pedromontenegromatrix/PruebaIngPlataforma'
+    if: github.repository != 'PruebaIngPlataforma'
     name: "Terraform Plan"
     runs-on: ubuntu-latest
     permissions:
