@@ -11,7 +11,7 @@ resource "aws_security_group" "this" {
   count       = local.borrado ? 0 : 1
   name        = "sgr-${var.env}-${var.project}-${var.name}-01"
   description = "Allow traffic"
-  vpc_id      = aws_vpc.this.id
+  vpc_id      = aws_vpc.this[0].id
 
   ingress {
     from_port   = 443
