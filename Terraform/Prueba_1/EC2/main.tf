@@ -9,6 +9,15 @@ resource "aws_vpc" "this" {
   }
 }
 
+resource "aws_internet_gateway" "this" {
+  count  = local.borrado ? 0 : 1
+  vpc_id = aws_vpc.this[0].id
+
+  tags = {
+    Name = "ig-${var.env}-${var.project}-${var.name}-01"
+  }
+}
+
 resource "aws_subnet" "this" {
   count             = local.borrado ? 0 : 2
   vpc_id            = aws_vpc.this[0].id
@@ -16,7 +25,7 @@ resource "aws_subnet" "this" {
   availability_zone = element(local.aws_availability_zones, count.index)
 
   tags = {
-    Name = "sn-${var.env}-${var.project}-${var.name}-0${count.index}"
+    Name = "sn-${var.env}-${var.project}-${var.name}-0${count.index + 1}"
   }
 
   depends_on = [aws_vpc.this]
@@ -34,6 +43,12 @@ resource "aws_security_group" "this" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["192.16.0.0/24"]
+  }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
