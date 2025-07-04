@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "this" {
 /*
 */
 resource "aws_default_route_table" "this" {
-  count  = local.borrado ? 0 : 1
+  count                  = local.borrado ? 0 : 1
   default_route_table_id = aws_vpc.this[0].default_route_table_id
 
   route {
