@@ -1,4 +1,5 @@
 resource "aws_vpc" "this" {
+  count      = local.borrado ? 0 : 1
   cidr_block = "10.0.0.0/16"
 
   tags = {
@@ -7,6 +8,7 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_security_group" "this" {
+  count       = local.borrado ? 0 : 1
   name        = "sgr-${var.env}-${var.project}-${var.name}-01"
   description = "Allow traffic"
   vpc_id      = aws_vpc.this.id
