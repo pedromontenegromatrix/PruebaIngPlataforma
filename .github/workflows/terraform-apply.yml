@@ -13,7 +13,7 @@ env:
 
 jobs:
   terraform:
-    if: github.repository != 'pedromontenegromatrix/PruebaIngPlataforma'
+    if: github.repository != 'PruebaIngPlataforma'
     name: "Terraform Apply"
     runs-on: ubuntu-latest
     permissions: # granular permissions
