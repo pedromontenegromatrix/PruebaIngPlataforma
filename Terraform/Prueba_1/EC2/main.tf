@@ -1,6 +1,8 @@
 resource "aws_vpc" "this" {
-  count      = local.borrado ? 0 : 1
-  cidr_block = "10.0.0.0/16"
+  count                = local.borrado ? 0 : 1
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
     Name = "vpc-${var.env}-${var.project}-${var.name}-01"
@@ -12,7 +14,12 @@ resource "aws_subnet" "this" {
   vpc_id            = aws_vpc.this[0].id
   cidr_block        = element(local.array_nets, count.index)
   availability_zone = element(local.aws_availability_zones, count.index)
-  depends_on        = [aws_vpc.this]
+
+  tags = {
+    Name = "sn-${var.env}-${var.project}-${var.name}-0${count.index}"
+  }
+
+  depends_on = [aws_vpc.this]
 }
 
 
@@ -85,10 +92,11 @@ resource "aws_iam_role_policy_attachment" "this" {
 resource "aws_instance" "this" {
   count = local.borrado ? 0 : 1
 
-  ami                    = local.bh_ami
-  instance_type          = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.this[0].id]
-  subnet_id              = aws_subnet.this[0].id
+  ami                         = local.bh_ami
+  instance_type               = "t3.micro"
+  vpc_security_group_ids      = [aws_security_group.this[0].id]
+  subnet_id                   = aws_subnet.this[0].id
+  associate_public_ip_address = true
 
   metadata_options {
     http_endpoint               = "enabled"
