@@ -9,7 +9,7 @@ resource "aws_vpc" "this" {
 
 resource "aws_subnet" "this" {
   count             = local.borrado ? 0 : 2
-  vpc_id            = aws_vpc.this.id
+  vpc_id            = aws_vpc.this[0].id
   cidr_block        = element(local.array_nets, count.index)
   availability_zone = element(local.aws_availability_zones, count.index)
   depends_on        = [aws_vpc.this]
