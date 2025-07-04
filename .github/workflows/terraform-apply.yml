@@ -3,8 +3,6 @@ name: "Terraform Apply"
 on:
   push:
     branches: [ "prueba_inicial_terraform_output" ]
-  pull_request:
-    branches: [ "prueba_inicial_terraform_output" ]
 
 env:
   TF_WORKSPACE: "pruebaIngPlataforma"

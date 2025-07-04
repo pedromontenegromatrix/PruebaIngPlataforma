@@ -1,8 +1,6 @@
 name: "Terraform Plan"
 
 on:
-  push:
-    branches: [ "prueba_inicial_terraform_output" ]
   pull_request:
     branches: [ "prueba_inicial_terraform_output" ]
 
