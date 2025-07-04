@@ -29,7 +29,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
 
-      - name: Create Destroy Run
+      - name: Create Apply Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
         id: apply-run
         with:
@@ -37,7 +37,7 @@ jobs:
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
           is_destroy: true
 
-      - name: Destroy
+      - name: Apply
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
         if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
         id: apply
