@@ -4,11 +4,9 @@ terraform {
   required_providers {
     aws    = ">= 4.20.0"
     random = ">= 3.3.0"
-  }
-  # Require the latest 2.x version of the New Relic provider
-  required_providers {
+    # Require the latest 2.x version of the New Relic provider
     newrelic = {
-      source  = "newrelic/newrelic"
+      source = "newrelic/newrelic"
     }
   }
   #backend "remote" {}
