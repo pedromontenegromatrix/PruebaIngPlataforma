@@ -36,7 +36,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config="token=${{ secrets.TF_API_TOKEN }}" -backend-config="organization=PruebaIngPlataforma" #--config="workspaces.name=PruebaIngPlataforma"
+        run: terraform init -backend-config="token=${{ secrets.TF_API_TOKEN }}" -backend-config="organization=PruebaIngPlataforma" -backend-config="spaces=name=PruebaIngPlataforma" #--config="workspaces.name=PruebaIngPlataforma"
               
       - name: Terraform Destroy
         id: destroy
