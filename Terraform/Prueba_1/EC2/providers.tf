@@ -9,7 +9,13 @@ terraform {
       source = "newrelic/newrelic"
     }
   }
-  #backend "remote" {}
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "PruebaIngPlataforma"
+    workspaces {
+      name = "PruebaIngPlataforma"
+    }
+  }
 }
 
 provider "aws" {
