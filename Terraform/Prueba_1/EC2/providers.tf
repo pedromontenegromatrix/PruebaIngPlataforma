@@ -9,12 +9,14 @@ terraform {
       source = "newrelic/newrelic"
     }
   }
+/*
   cloud  {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
     }
   }
+*/
 }
 
 provider "aws" {
