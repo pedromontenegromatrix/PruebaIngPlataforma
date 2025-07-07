@@ -9,8 +9,7 @@ terraform {
       source = "newrelic/newrelic"
     }
   }
-  backend "remote" {
-    hostname     = "app.terraform.io"
+  cloud  {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
