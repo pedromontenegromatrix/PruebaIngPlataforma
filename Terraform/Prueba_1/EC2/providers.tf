@@ -10,7 +10,12 @@ terraform {
     }
   }
 
-  backend "remote" {}
+  backend "remote" {
+    organization = "PruebaIngPlataforma"
+    workspaces {
+      name = "PruebaIngPlataforma"
+    }
+}
 /*
   cloud  {
     organization = "PruebaIngPlataforma"
