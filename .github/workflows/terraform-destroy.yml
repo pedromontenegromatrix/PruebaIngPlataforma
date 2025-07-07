@@ -33,10 +33,15 @@ jobs:
         with:
           terraform_version: 1.1.7
           #cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        env:
+          TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config="organization=PruebaIngPlataforma" -backend-config="workspaces.name=PruebaIngPlataforma" -backend-config="token=${{ secrets.TF_API_TOKEN }}"
+        run: terraform init 
+        #-backend-config="organization=PruebaIngPlataforma" -backend-config="workspaces.name=PruebaIngPlataforma" -backend-config="token=${{ secrets.TF_API_TOKEN }}"
+        env:
+          TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
       
       - name: Terraform Destroy
         id: destroy
@@ -46,3 +51,4 @@ jobs:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+            TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
