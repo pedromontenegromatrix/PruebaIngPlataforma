@@ -10,21 +10,14 @@ terraform {
     }
   }
 
+
   backend "remote" {
-    organization = "PruebaIngPlataforma"
-    workspaces {
-      name = "PruebaIngPlataforma"
-#project  = "PruebaIngPlataforma"
-    }
-}
-/*
-  cloud  {
+    hostname     = "app.terraform.io"
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
     }
   }
-*/
 }
 
 provider "aws" {
