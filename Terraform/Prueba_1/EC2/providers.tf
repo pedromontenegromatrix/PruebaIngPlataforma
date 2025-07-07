@@ -9,6 +9,8 @@ terraform {
       source = "newrelic/newrelic"
     }
   }
+
+  backend "remote" {}
 /*
   cloud  {
     organization = "PruebaIngPlataforma"
