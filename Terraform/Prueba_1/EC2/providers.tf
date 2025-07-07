@@ -14,7 +14,7 @@ terraform {
     }
   }
 
-
+backend "remote" {
   cloud {
     hostname     = "app.terraform.io"
     organization = "PruebaIngPlataforma"
@@ -23,6 +23,7 @@ terraform {
 project= "PruebaIngPlataforma"
     }
   }
+}
 }
 
 provider "aws" {
