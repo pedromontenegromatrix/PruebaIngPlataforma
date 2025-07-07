@@ -21,14 +21,17 @@ jobs:
     permissions: # granular permissions
       # so GitHub can check out this repo using the default github.token
       contents: read
+    defaults:
+      run:
+        working-directory: ${{ env.CONFIG_DIRECTORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.1.7
 
       - name: Terraform Init
         id: init
