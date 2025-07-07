@@ -14,7 +14,7 @@ terraform {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
-project  = "PruebaIngPlataforma"
+#project  = "PruebaIngPlataforma"
     }
 }
 /*
