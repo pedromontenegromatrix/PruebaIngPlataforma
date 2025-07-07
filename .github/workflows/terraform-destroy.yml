@@ -36,7 +36,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config="token=${{ secrets.TF_API_TOKEN }}" -backend-config="organization=PruebaIngPlataforma" -backend-config="workspaces.name=PruebaIngPlataforma" #--config="workspaces.name=PruebaIngPlataforma"
+        run: terraform init -backend-config="token=${{ secrets.TF_API_TOKEN }}" -backend-config="organization=PruebaIngPlataforma" -backend-config="workspaces=PruebaIngPlataforma" #--config="workspaces.name=PruebaIngPlataforma"
         env:
             TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
             TF_CLOUD_ORGANIZATION: "PruebaIngPlataforma"  
