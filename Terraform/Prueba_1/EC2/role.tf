@@ -8,7 +8,12 @@ resource "aws_iam_role" "this_integracion" {
       {
         Action = "sts:AssumeRole",
         Principal = {
-          AWS = "arn:aws:iam::${var.new_relic_account}:root" # Replace with New Relic account ID
+          AWS = "*" # Replace with New Relic account ID
+        },
+        Condition = {
+          StringEquals = {
+            "sts:ExternalId" = "${var.new_relic_account}"
+          }
         },
         Effect = "Allow",
         Sid    = ""
