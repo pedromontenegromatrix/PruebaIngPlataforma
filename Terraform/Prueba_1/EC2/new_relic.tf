@@ -42,40 +42,53 @@ resource "newrelic_nrql_alert_condition" "this" {
   ]
 }
 
-/*
-resource "newrelic_nrql_alert_condition" "foo" {
-  type                         = "baseline"
-  account_id                   = 12345678
-  name                         = "foo"
-  policy_id                    = newrelic_alert_policy.foo.id
-  description                  = "Alert when transactions are taking too long"
-  enabled                      = true
-  runbook_url                  = "https://www.example.com"
-  violation_time_limit_seconds = 3600
-  aggregation_method           = "event_flow"
-  aggregation_delay            = 120
-  slide_by                     = 30
+##############################################################################################
+##############################################################################################
+##############################################################################################
 
-  # baseline type only
-  baseline_direction = "upper_only"
-  signal_seasonality = "weekly"
+resource "newrelic_alert_policy" "this2" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
-  nrql {
-    query = "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ExampleAppName'"
-  }
-
-  critical {
-    operator              = "above"
-    threshold             = 5.5
-    threshold_duration    = 300
-    threshold_occurrences = "all"
-  }
-
-  warning {
-    operator              = "above"
-    threshold             = 3.5
-    threshold_duration    = 600
-    threshold_occurrences = "all"
-  }
+  provider            = newrelic.newrelic
+  name                = "EC2 CPU Usage Alert"
+  incident_preference = "PER_POLICY"
 }
-*/
+
+# Define el umbral de alerta para la CPU
+resource "newrelic_alert_condition" "this2" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider  = newrelic.newrelic
+  policy_id = newrelic_alert_policy.this2.id
+  type      = "metric"
+  name      = "EC2 CPU Utilization"
+  enabled   = true
+
+  # Condición basada en la métrica de CPU
+  metric          = "CpuUtilization"
+  condition_scope = "instance"
+
+  # Filtro por instancia EC2 (reemplaza con tu ID de instancia)
+  where = "entity.guid = '${aws_instance.this[0].id}'"
+
+  # Umbral de alerta (ej: 80% de uso de CPU)
+  comparison = "above"
+  critical_threshold = {
+    value         = 80
+    duration      = 120
+    time_function = "all"
+  }
+
+  # Opcional: Define un umbral de advertencia (ej: 60% de uso de CPU)
+  warning_threshold = {
+    value         = 60
+    duration      = 120
+    time_function = "all"
+  }
+
+  depends_on = [
+    aws_instance.this,
+    newrelic_alert_policy.this2
+  ]
+}
+
