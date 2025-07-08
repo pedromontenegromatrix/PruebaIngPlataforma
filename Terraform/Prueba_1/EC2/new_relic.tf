@@ -16,7 +16,7 @@ resource "newrelic_nrql_alert_condition" "this" {
     #since = "5 minutes ago"
   }
 
-  terms {
+  term {
     duration              = "5"
     operator              = "above"
     threshold             = 80
