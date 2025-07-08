@@ -5,6 +5,8 @@ resource "newrelic_cloud_aws_link_account" "this" {
   arn                    = aws_iam_role.this_integracion[0].arn
   metric_collection_mode = "PULL"
   name                   = "link-${local.env}-${var.project}-NewRelicIntegration-01"
+
+  depends_on = [aws_iam_role_policy_attachment.this_integracion]
 }
 
 resource "newrelic_cloud_aws_integrations" "this" {
@@ -18,17 +20,19 @@ resource "newrelic_cloud_aws_integrations" "this" {
     aws_regions              = [var.region]
     fetch_nat_gateway        = true
     fetch_vpn                = false
-    tag_key                  = "tag key"
-    tag_value                = "tag value"
+    tag_key                  = "Name"
+    tag_value                = "*vpc*"
   }
   ec2 {
     aws_regions              = [var.region]
     duplicate_ec2_tags       = true
     fetch_ip_addresses       = true
     metrics_polling_interval = 300
-    tag_key                  = "tag key"
-    tag_value                = "tag value"
+    tag_key                  = "Name"
+    tag_value                = "*asgr*"
   }
+
+  depends_on = [newrelic_cloud_aws_link_account.this]
 }
 
 resource "newrelic_alert_policy" "this" {

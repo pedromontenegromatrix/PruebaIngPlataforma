@@ -20,8 +20,6 @@ resource "aws_internet_gateway" "this" {
   depends_on = [aws_vpc.this]
 }
 
-/*
-*/
 resource "aws_default_route_table" "this" {
   count                  = local.borrado ? 0 : 1
   default_route_table_id = aws_vpc.this[0].default_route_table_id
@@ -124,7 +122,7 @@ resource "aws_iam_role_policy_attachment" "this" {
 
 
 resource "aws_instance" "this" {
-  count = local.borrado ? 0 : 1
+  count = local.borrado ? 0 : 2
 
   ami                         = local.bh_ami
   instance_type               = "t3.micro"
@@ -143,7 +141,7 @@ resource "aws_instance" "this" {
   user_data            = filebase64("scripts/bastion_host.sh")
 
   tags = {
-    Name = "asgr-${local.env}-${var.project}-${var.name}-01"
+    Name = "asgr-${local.env}-${var.project}-${var.name}-0${count.index + 1}"
   }
 
   depends_on = [
