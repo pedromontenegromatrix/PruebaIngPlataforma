@@ -57,17 +57,17 @@ resource "newrelic_alert_policy" "this" {
 }
 
 resource "newrelic_nrql_alert_condition" "this" {
-  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+  count = local.borrado || var.new_relic_account == "" ? 0 : local.cantidad_ec2
 
   provider   = newrelic.newrelic
   account_id = var.new_relic_account
   policy_id  = newrelic_alert_policy.this[0].id
-  name       = "alert-${local.env}-${var.project}-EC2CPU-01"
+  name       = "alert-${local.env}-${var.project}-EC2CPU-0${count.index + 1}"
   type       = "static"
   enabled    = true
 
   nrql {
-    query = "SELECT average(provider.cpuUtilization.Sum) FROM ComputeSample WHERE `provider.ec2InstanceId` = '${aws_instance.this[0].id}'"
+    query = "SELECT average(provider.cpuUtilization.Sum) FROM ComputeSample WHERE `provider.ec2InstanceId` = '${aws_instance.this[count.index].id}'"
     #since = "5 minutes ago"
   }
 

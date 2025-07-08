@@ -13,6 +13,11 @@ variable "name" {
   default = "prmr"
 }
 
+variable "cantidad_ec2" {
+  type    = number
+  default = 2
+}
+
 #######################################################################
 variable "region" {
   type    = string
