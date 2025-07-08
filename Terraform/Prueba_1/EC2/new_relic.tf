@@ -59,7 +59,7 @@ resource "newrelic_alert_condition" "this2" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
   provider  = newrelic.newrelic
-  policy_id = newrelic_alert_policy.this2.id
+  policy_id = newrelic_alert_policy.this2[0].id
   type      = "metric"
   name      = "EC2 CPU Utilization"
   enabled   = true
