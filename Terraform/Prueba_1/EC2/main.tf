@@ -122,7 +122,7 @@ resource "aws_iam_role_policy_attachment" "this" {
 
 
 resource "aws_instance" "this" {
-  count = local.borrado ? 0 : 2
+  count = local.borrado ? 0 : local.cantidad_ec2
 
   ami                         = local.bh_ami
   instance_type               = "t3.micro"

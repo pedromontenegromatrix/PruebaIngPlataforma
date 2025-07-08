@@ -1,5 +1,6 @@
 locals {
   env                    = var.branch == "develop" ? "dev" : (var.branch == "main" ? "prod" : "test")
+  cantidad_ec2           = var.cantidad_ec2
   borrado                = false #var.destroy
   array_nets             = ["10.0.0.0/24", "10.0.1.0/24"]
   aws_availability_zones = slice(data.aws_availability_zones.this.names, 0, length(local.array_nets))
