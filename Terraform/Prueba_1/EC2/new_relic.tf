@@ -1,3 +1,15 @@
+resource "newrelic_application_settings" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider                    = newrelic.newrelic
+  name                        = "app-${local.env}-${var.project}-AppNewRelicIntegration-01"
+  app_apdex_threshold         = "0.7"
+  end_user_apdex_threshold    = "0.8"
+  enable_real_user_monitoring = false
+
+  depends_on = [aws_iam_role_policy_attachment.this_integracion]
+}
+
 resource "newrelic_cloud_aws_link_account" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
@@ -55,7 +67,7 @@ resource "newrelic_nrql_alert_condition" "this" {
   enabled    = true
 
   nrql {
-    query = "SELECT average(cpuPercent) FROM SystemSample WHERE `entity.guid` = '${aws_instance.this[0].id}'"
+    query = "SELECT average(provider.cpuUtilization.Sum) FROM ComputeSample WHERE `provider.ec2InstanceId` = '${aws_instance.this[0].id}'"
     #since = "5 minutes ago"
   }
 
@@ -67,7 +79,7 @@ resource "newrelic_nrql_alert_condition" "this" {
   }
 
   warning {
-    operator              = "above"
+    operator              = "below"
     threshold             = 3.5
     threshold_duration    = 600
     threshold_occurrences = "all"
