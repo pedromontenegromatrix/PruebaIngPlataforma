@@ -10,25 +10,16 @@ terraform {
     }
   }
 
-  backend "remote" {
-    organization = "PruebaIngPlataforma"
-    workspaces {
-      name = "PruebaIngPlataforma"
-#project  = "PruebaIngPlataforma"
-    }
-}
-/*
-  cloud  {
+  cloud {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
     }
   }
-*/
 }
 
 provider "aws" {
-  #access_key = var.access_key
-  #secret_key = var.secret_key
-  region = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = var.region
 }

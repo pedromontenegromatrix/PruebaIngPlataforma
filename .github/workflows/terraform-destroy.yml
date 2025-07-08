@@ -25,25 +25,40 @@ jobs:
       run:
         working-directory: ${{ env.CONFIG_DIRECTORY }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.3.0
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 1.7.5
+
+      - name: Configure Terraform credentials file
+        run: |
+          mkdir -p ~/.terraform.d
+          echo '{
+            "credentials": {
+              "app.terraform.io": {
+                "token": "'${TF_API_TOKEN}'"
+              }
+            }
+          }' > ~/.terraform.d/credentials.tfrc.json
+        env:
+          TF_API_TOKEN: ${{ env.TF_API_TOKEN }}
 
       - name: Terraform Init
-        id: init
-        run: terraform init #-backend-config="organization=PruebaIngPlataforma" --config="workspaces.name=PruebaIngPlataforma" -backend-config="token=${{ secrets.TF_API_TOKEN }}"
-              
-      - name: Terraform Destroy
-        id: destroy
-        working-directory: ${{ github.event.inputs.resource }}
-        run: terraform destroy -auto-approve 
+        run: terraform init
+
+      - name: Terraform Plan
         env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-            TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform plan
+
+      - name: Terraform Destroy
+        env:
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform destroy -auto-approve
