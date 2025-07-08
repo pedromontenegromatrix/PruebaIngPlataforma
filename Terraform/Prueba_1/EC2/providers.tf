@@ -22,9 +22,12 @@ terraform {
   }
 }
 
-
 provider "aws" {
-  #access_key = var.access_key
-  #secret_key = var.secret_key
   region = var.region
+}
+
+provider "newrelic" {
+  account_id = var.new_relic_account
+  api_key    = var.new_relic_api_key
+  region     = var.new_relic_region
 }

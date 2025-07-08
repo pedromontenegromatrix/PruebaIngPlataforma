@@ -5,7 +5,7 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
 
   tags = {
-    Name = "vpc-${var.env}-${var.project}-${var.name}-01"
+    Name = "vpc-${local.env}-${var.project}-${var.name}-01"
   }
 }
 
@@ -14,7 +14,7 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this[0].id
 
   tags = {
-    Name = "ig-${var.env}-${var.project}-${var.name}-01"
+    Name = "ig-${local.env}-${var.project}-${var.name}-01"
   }
 
   depends_on = [aws_vpc.this]
@@ -32,7 +32,7 @@ resource "aws_default_route_table" "this" {
   }
 
   tags = {
-    Name = "rt-${var.env}-${var.project}-${var.name}-01"
+    Name = "rt-${local.env}-${var.project}-${var.name}-01"
   }
   depends_on = [aws_vpc.this]
 }
@@ -44,7 +44,7 @@ resource "aws_subnet" "this" {
   availability_zone = element(local.aws_availability_zones, count.index)
 
   tags = {
-    Name = "sn-${var.env}-${var.project}-${var.name}-0${count.index + 1}"
+    Name = "sn-${local.env}-${var.project}-${var.name}-0${count.index + 1}"
   }
 
   depends_on = [aws_vpc.this]
@@ -53,7 +53,7 @@ resource "aws_subnet" "this" {
 
 resource "aws_security_group" "this" {
   count       = local.borrado ? 0 : 1
-  name        = "sgr-${var.env}-${var.project}-${var.name}-01"
+  name        = "sgr-${local.env}-${var.project}-${var.name}-01"
   description = "Allow traffic"
   vpc_id      = aws_vpc.this[0].id
 
@@ -78,7 +78,7 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name = "sgr-${var.env}-${var.project}-${var.name}-01"
+    Name = "sgr-${local.env}-${var.project}-${var.name}-01"
   }
 
   depends_on = [aws_vpc.this]
@@ -88,7 +88,7 @@ resource "aws_security_group" "this" {
 resource "aws_iam_role" "this" {
   count = local.borrado ? 0 : 1
 
-  name        = "role-${var.env}-${var.project}-${var.name}-01"
+  name        = "role-${local.env}-${var.project}-${var.name}-01"
   description = "Role for SSM Bastion Hosts"
 
   assume_role_policy = jsonencode(
@@ -106,13 +106,13 @@ resource "aws_iam_role" "this" {
   })
 
   tags = {
-    Name = "role-${var.env}-${var.project}-${var.name}-01"
+    Name = "role-${local.env}-${var.project}-${var.name}-01"
   }
 }
 
 resource "aws_iam_instance_profile" "this" {
   count = local.borrado ? 0 : 1
-  name  = "role${var.env}-${var.project}-${var.name}-01"
+  name  = "role${local.env}-${var.project}-${var.name}-01"
   role  = aws_iam_role.this[0].name
 }
 
@@ -143,7 +143,7 @@ resource "aws_instance" "this" {
   user_data            = filebase64("scripts/bastion_host.sh")
 
   tags = {
-    Name = "asgr-${var.env}-${var.project}-${var.name}-01"
+    Name = "asgr-${local.env}-${var.project}-${var.name}-01"
   }
 
   depends_on = [
