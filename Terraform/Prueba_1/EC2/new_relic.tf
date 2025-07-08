@@ -1,8 +1,41 @@
+resource "newrelic_cloud_aws_link_account" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider               = newrelic.newrelic
+  arn                    = aws_iam_role.this_integracion[0].arn
+  metric_collection_mode = "PULL"
+  name                   = "link-${local.env}-${var.project}-NewRelicIntegration-01"
+}
+
+resource "newrelic_cloud_aws_integrations" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider          = newrelic.newrelic
+  linked_account_id = newrelic_cloud_aws_link_account.this[0].id
+
+  vpc {
+    metrics_polling_interval = 900
+    aws_regions              = [var.region]
+    fetch_nat_gateway        = true
+    fetch_vpn                = false
+    tag_key                  = "tag key"
+    tag_value                = "tag value"
+  }
+  ec2 {
+    aws_regions              = [var.region]
+    duplicate_ec2_tags       = true
+    fetch_ip_addresses       = true
+    metrics_polling_interval = 300
+    tag_key                  = "tag key"
+    tag_value                = "tag value"
+  }
+}
+
 resource "newrelic_alert_policy" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
   provider = newrelic.newrelic
-  name     = "Alerta EC2"
+  name     = "alert-pl-${local.env}-${var.project}-EC2AwsNewRelic-01"
 
   depends_on = [aws_instance.this]
 }
@@ -13,7 +46,7 @@ resource "newrelic_nrql_alert_condition" "this" {
   provider   = newrelic.newrelic
   account_id = var.new_relic_account
   policy_id  = newrelic_alert_policy.this[0].id
-  name       = "Alerta de CPU Alta"
+  name       = "alert-${local.env}-${var.project}-EC2CPU-01"
   type       = "static"
   enabled    = true
 
@@ -42,40 +75,53 @@ resource "newrelic_nrql_alert_condition" "this" {
   ]
 }
 
+##############################################################################################
+##############################################################################################
+##############################################################################################
 /*
-resource "newrelic_nrql_alert_condition" "foo" {
-  type                         = "baseline"
-  account_id                   = 12345678
-  name                         = "foo"
-  policy_id                    = newrelic_alert_policy.foo.id
-  description                  = "Alert when transactions are taking too long"
-  enabled                      = true
-  runbook_url                  = "https://www.example.com"
-  violation_time_limit_seconds = 3600
-  aggregation_method           = "event_flow"
-  aggregation_delay            = 120
-  slide_by                     = 30
+resource "newrelic_alert_policy" "this2" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
-  # baseline type only
-  baseline_direction = "upper_only"
-  signal_seasonality = "weekly"
+  provider            = newrelic.newrelic
+  name                = "EC2 CPU Usage Alert"
+  incident_preference = "PER_POLICY"
+}
 
-  nrql {
-    query = "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ExampleAppName'"
+# Define el umbral de alerta para la CPU
+resource "newrelic_alert_condition" "this2" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider  = newrelic.newrelic
+  policy_id = newrelic_alert_policy.this2[0].id
+  type      = "metric"
+  name      = "EC2 CPU Utilization"
+  enabled   = true
+
+  # Condición basada en la métrica de CPU
+  metric          = "CpuUtilization"
+  condition_scope = "instance"
+
+  # Filtro por instancia EC2 (reemplaza con tu ID de instancia)
+  where = "entity.guid = '${aws_instance.this[0].id}'"
+
+  # Umbral de alerta (ej: 80% de uso de CPU)
+  comparison = "above"
+  critical_threshold = {
+    value         = 80
+    duration      = 120
+    time_function = "all"
   }
 
-  critical {
-    operator              = "above"
-    threshold             = 5.5
-    threshold_duration    = 300
-    threshold_occurrences = "all"
+  # Opcional: Define un umbral de advertencia (ej: 60% de uso de CPU)
+  warning_threshold = {
+    value         = 60
+    duration      = 120
+    time_function = "all"
   }
 
-  warning {
-    operator              = "above"
-    threshold             = 3.5
-    threshold_duration    = 600
-    threshold_occurrences = "all"
-  }
+  depends_on = [
+    aws_instance.this,
+    newrelic_alert_policy.this2
+  ]
 }
 */
