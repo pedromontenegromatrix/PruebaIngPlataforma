@@ -14,18 +14,16 @@ terraform {
     }
   }
 
-backend "remote" {
-    hostname     = "app.terraform.io"
+  cloud {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
-#project= "PruebaIngPlataforma"
     }
   }
 }
 
 provider "aws" {
-  #access_key = var.access_key
-  #secret_key = var.secret_key
-  region = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = var.region
 }
