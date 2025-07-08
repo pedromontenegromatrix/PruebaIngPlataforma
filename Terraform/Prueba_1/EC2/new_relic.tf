@@ -1,3 +1,4 @@
+/*
 resource "newrelic_application_settings" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
@@ -9,6 +10,7 @@ resource "newrelic_application_settings" "this" {
 
   depends_on = [aws_iam_role_policy_attachment.this_integracion]
 }
+*/
 
 resource "newrelic_cloud_aws_link_account" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
