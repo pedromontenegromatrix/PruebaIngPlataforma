@@ -27,7 +27,7 @@ provider "aws" {
 }
 
 provider "newrelic" {
-  alias = "newrelic"
+  alias      = "newrelic"
   account_id = var.new_relic_account
   api_key    = var.new_relic_api_key
   region     = var.new_relic_region
