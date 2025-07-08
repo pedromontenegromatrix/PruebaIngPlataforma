@@ -9,7 +9,7 @@ terraform {
       source = "newrelic/newrelic"
     }
     null = {
-      source = "hashicorp/null"
+      source  = "hashicorp/null"
       version = "3.2.2"
     }
   }
