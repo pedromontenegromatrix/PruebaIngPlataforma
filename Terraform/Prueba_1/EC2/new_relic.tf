@@ -1,6 +1,8 @@
 resource "newrelic_alert_policy" "this" {
   count = local.borrado ? 0 : 1
   name  = "Alerta EC2"
+
+  depends_on = [aws_instance.this]
 }
 
 resource "newrelic_nrql_alert_condition" "this" {
@@ -21,4 +23,8 @@ resource "newrelic_nrql_alert_condition" "this" {
     threshold_duration    = "5"
     threshold_occurrences = "AT_LEAST_ONCE"
   }
+  depends_on = [
+    aws_instance.this,
+    newrelic_alert_policy.this
+  ]
 }
