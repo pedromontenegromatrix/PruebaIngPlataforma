@@ -1,9 +1,8 @@
 name: "Terraform Plan"
 
 on:
-  workflow_dispatch:
-  #pull_request:
-    #branches: [ "prueba_inicial_terraform_output" ]
+  pull_request:
+    branches: [ "prueba_inicial_terraform_output" ]
 
 env:
   TF_WORKSPACE: "pruebaIngPlataforma"
