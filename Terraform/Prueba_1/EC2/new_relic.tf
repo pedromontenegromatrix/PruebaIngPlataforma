@@ -1,12 +1,16 @@
 resource "newrelic_alert_policy" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
-  name  = "Alerta EC2"
+
+  provider = newrelic.newrelic
+  name     = "Alerta EC2"
 
   depends_on = [aws_instance.this]
 }
 
 resource "newrelic_nrql_alert_condition" "this" {
-  count      = local.borrado || var.new_relic_account == "" ? 0 : 1
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider   = newrelic.newrelic
   account_id = var.new_relic_account
   policy_id  = newrelic_alert_policy.this[0].id
   name       = "Alerta de CPU Alta"
