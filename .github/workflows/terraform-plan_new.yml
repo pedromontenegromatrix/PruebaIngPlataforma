@@ -1,0 +1,94 @@
+name: "Terraform Plan New"
+
+on:
+  pull_request:
+    branches: [ "prueba_inicial_terraform_output" ]
+
+env:
+  CONFIG_DIRECTORY: "./Terraform/Prueba_1/EC2"
+
+jobs:
+  terraform:
+    if: github.repository != 'PruebaIngPlataforma'
+    name: "Terraform Plan New"
+    runs-on: ubuntu-latest
+    permissions:
+      # so GitHub can check out this repo using the default github.token
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: ${{ env.CONFIG_DIRECTORY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Configure Terraform credentials file
+        run: |
+          mkdir -p ~/.terraform.d
+          echo '{
+            "credentials": {
+              "app.terraform.io": {
+                "token": "'${TF_API_TOKEN}'"
+              }
+            }
+          }' > ~/.terraform.d/credentials.tfrc.json
+        env:
+          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: terraform_init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: terraform_plan
+        env:
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_branch: ${{ steps.extract_branch.outputs.branch }}
+          TF_VAR_new_relic_account: ${{ secrets.NEW_RELIC_ACCOUNT }}
+          TF_VAR_new_relic_api_key: ${{ secrets.NEW_RELIC_API_KEY }}
+          TF_VAR_new_relic_region: ${{ secrets.NEW_RELIC_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform plan
+
+      - name: Update PR
+        uses: actions/github-script@v6
+        id: plan-comment
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Cloud Plan Output')
+            });
+            const output = `#### Terraform Cloud Plan Output
+               \`\`\`
+               Plan: ${{ steps.terraform_plan.outputs.add }} to add, ${{ steps.terraform_plan.outputs.change }} to change, ${{ steps.terraform_plan.outputs.destroy }} to destroy.
+               \`\`\`
+               [Terraform Cloud Plan](${{ steps.terraform_plan.outputs.run_link }})
+               `;
+            // 3. Delete previous comment so PR timeline makes sense
+            if (botComment) {
+              github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+              });
+            }
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });

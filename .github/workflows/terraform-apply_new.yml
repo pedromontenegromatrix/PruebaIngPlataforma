@@ -47,6 +47,10 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_branch: ${{ steps.extract_branch.outputs.branch }}
+          TF_VAR_new_relic_account: ${{ secrets.NEW_RELIC_ACCOUNT }}
+          TF_VAR_new_relic_api_key: ${{ secrets.NEW_RELIC_API_KEY }}
+          TF_VAR_new_relic_region: ${{ secrets.NEW_RELIC_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform plan
