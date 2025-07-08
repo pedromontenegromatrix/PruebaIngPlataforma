@@ -1,7 +1,7 @@
 resource "newrelic_cloud_aws_link_account" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
-  arn                    = aws_iam_role.this[0].arn
+  arn                    = aws_iam_role.this_integracion[0].arn
   metric_collection_mode = "PULL"
   name                   = "link-${local.env}-${var.project}-NewRelicIntegration-01"
 }

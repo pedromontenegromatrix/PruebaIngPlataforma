@@ -1,5 +1,5 @@
 # IAM Role for New Relic Integration
-resource "aws_iam_role" "this" {
+resource "aws_iam_role" "this_integracion" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
   name  = "role-${local.env}-${var.project}-RoleNewRelicIntegrationRole-01"
   assume_role_policy = jsonencode({
@@ -59,6 +59,6 @@ resource "aws_iam_policy" "this" {
 
 resource "aws_iam_role_policy_attachment" "this_integracion" {
   count      = local.borrado || var.new_relic_account == "" ? 0 : 1
-  role       = aws_iam_role.this[0].name
+  role       = aws_iam_role.this_integracion[0].name
   policy_arn = aws_iam_policy.this[0].arn
 }
