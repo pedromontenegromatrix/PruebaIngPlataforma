@@ -1,6 +1,7 @@
 resource "newrelic_cloud_aws_link_account" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
+  provider               = newrelic.newrelic
   arn                    = aws_iam_role.this_integracion[0].arn
   metric_collection_mode = "PULL"
   name                   = "link-${local.env}-${var.project}-NewRelicIntegration-01"
@@ -9,6 +10,7 @@ resource "newrelic_cloud_aws_link_account" "this" {
 resource "newrelic_cloud_aws_integrations" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
+  provider          = newrelic.newrelic
   linked_account_id = newrelic_cloud_aws_link_account.this[0].id
 
   vpc {
