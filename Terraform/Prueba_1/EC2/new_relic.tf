@@ -1,8 +1,39 @@
+resource "newrelic_cloud_aws_link_account" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  arn                    = aws_iam_role.this[0].arn
+  metric_collection_mode = "PULL"
+  name                   = "link-${local.env}-${var.project}-NewRelicIntegration-01"
+}
+
+resource "newrelic_cloud_aws_integrations" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  linked_account_id = newrelic_cloud_aws_link_account.this[0].id
+
+  vpc {
+    metrics_polling_interval = 900
+    aws_regions              = [var.region]
+    fetch_nat_gateway        = true
+    fetch_vpn                = false
+    tag_key                  = "tag key"
+    tag_value                = "tag value"
+  }
+  ec2 {
+    aws_regions              = [var.region]
+    duplicate_ec2_tags       = true
+    fetch_ip_addresses       = true
+    metrics_polling_interval = 300
+    tag_key                  = "tag key"
+    tag_value                = "tag value"
+  }
+}
+
 resource "newrelic_alert_policy" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
   provider = newrelic.newrelic
-  name     = "Alerta EC2"
+  name     = "alert-pl-${local.env}-${var.project}-EC2AwsNewRelic-01"
 
   depends_on = [aws_instance.this]
 }
@@ -13,7 +44,7 @@ resource "newrelic_nrql_alert_condition" "this" {
   provider   = newrelic.newrelic
   account_id = var.new_relic_account
   policy_id  = newrelic_alert_policy.this[0].id
-  name       = "Alerta de CPU Alta"
+  name       = "alert-${local.env}-${var.project}-EC2CPU-01"
   type       = "static"
   enabled    = true
 
@@ -45,7 +76,7 @@ resource "newrelic_nrql_alert_condition" "this" {
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
-
+/*
 resource "newrelic_alert_policy" "this2" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
 
@@ -91,4 +122,4 @@ resource "newrelic_alert_condition" "this2" {
     newrelic_alert_policy.this2
   ]
 }
-
+*/
