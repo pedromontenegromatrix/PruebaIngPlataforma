@@ -13,7 +13,7 @@ resource "newrelic_nrql_alert_condition" "this" {
 
   nrql {
     query = "SELECT average(cpuPercent) FROM SystemSample WHERE `entity.guid` = '${aws_instance.this[0].id}'"
-    since = "5 minutes ago"
+    #since = "5 minutes ago"
   }
 
   terms {
