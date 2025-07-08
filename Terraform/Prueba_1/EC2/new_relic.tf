@@ -1,14 +1,16 @@
-resource "newrelic_alert_policy" "mi_politica_alerta" {
-  name = "Alerta EC2"
+resource "newrelic_alert_policy" "this" {
+  count = local.borrado ? 0 : 1
+  name  = "Alerta EC2"
 }
 
-resource "newrelic_nrql_alert_condition" "mi_condicion_alerta" {
-  policy_id = newrelic_alert_policy.mi_politica_alerta.id
+resource "newrelic_nrql_alert_condition" "this" {
+  count     = local.borrado ? 0 : 1
+  policy_id = newrelic_alert_policy.this[0].id
   name      = "Alerta de CPU Alta"
   type      = "static"
 
   nrql {
-    query = "SELECT average(cpuPercent) FROM SystemSample WHERE `entity.guid` = '${aws_instance.this.id}'"
+    query = "SELECT average(cpuPercent) FROM SystemSample WHERE `entity.guid` = '${aws_instance.this[0].id}'"
     since = "5 minutes ago"
   }
 
