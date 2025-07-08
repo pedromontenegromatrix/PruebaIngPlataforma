@@ -1,9 +1,8 @@
 name: "Terraform Apply"
 
 on:
-  workflow_dispatch:
-  #push:
-    #branches: [ "prueba_inicial_terraform_output" ]
+  push:
+    branches: [ "prueba_inicial_terraform_output" ]
 
 env:
   TF_WORKSPACE: "pruebaIngPlataforma"
