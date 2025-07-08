@@ -5,9 +5,6 @@ on:
     branches: [ "prueba_inicial_terraform_output" ]
 
 env:
-  TF_WORKSPACE: "pruebaIngPlataforma"
-  TF_CLOUD_ORGANIZATION: "${{ secrets.TF_CLOUD_ORGANIZATION }}"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   CONFIG_DIRECTORY: "./Terraform/Prueba_1/EC2"
 
 jobs:
@@ -19,6 +16,9 @@ jobs:
       # so GitHub can check out this repo using the default github.token
       contents: read
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ${{ env.CONFIG_DIRECTORY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
