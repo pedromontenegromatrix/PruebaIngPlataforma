@@ -1,3 +1,4 @@
+/*
 resource "newrelic_alert_policy" "this" {
   count = local.borrado || var.new_relic_account == "" ? 0 : 1
   name  = "Alerta EC2"
@@ -28,3 +29,4 @@ resource "newrelic_nrql_alert_condition" "this" {
     newrelic_alert_policy.this
   ]
 }
+*/
