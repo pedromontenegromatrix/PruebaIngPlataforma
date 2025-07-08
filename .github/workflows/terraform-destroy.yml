@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  TF_WORKSPACE: "pruebaIngPlataforma"
+  TF_WORKSPACE: "${{ secrets.TF_WORKSPACE }}"
   TF_CLOUD_ORGANIZATION: "${{ secrets.TF_CLOUD_ORGANIZATION }}"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
