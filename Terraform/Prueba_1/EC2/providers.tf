@@ -1,3 +1,4 @@
+/*
 terraform {
   required_version = ">= 1.0.0"
 
@@ -18,6 +19,24 @@ terraform {
     organization = "PruebaIngPlataforma"
     workspaces {
       name = "PruebaIngPlataforma"
+    }
+  }
+}
+*/
+
+terraform {
+  cloud {
+    organization = "PruebasPersonales"
+
+    workspaces {
+      name = "PruebasPersonales"
+    }
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
   }
 }
