@@ -69,4 +69,40 @@ sudo grubby --set-default /boot/vmlinuz-6.1.91-99.172.amzn2023.x86_64
 curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
 newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
 
+sudo yum install cronie -y
+
+cat << 'EOF' > script_exec_cpu.sh
+#!/bin/bash
+
+# Función que realiza cálculos intensivos
+function stress_cpu {
+  while true; do
+    a=$((RANDOM * RANDOM))
+    b=$((a * a))
+    c=$((b / (a + 1)))
+  done
+}
+
+# Número de procesos a ejecutar en paralelo
+num_processes=${1:-4}
+
+# Duración de la prueba (en segundos)
+duration=${2:-60}
+
+# Iniciar los procesos en paralelo
+for i in $(seq 1 $num_processes); do
+  stress_cpu &
+done
+
+# Esperar la duración especificada
+sleep $duration
+
+# Matar todos los procesos
+pkill -f stress_cpu
+
+echo "Prueba de carga de CPU finalizada."
+EOF
+
+echo "*15 * * * * script_exec_cpu.sh 4 60" | crontab -
+
 sudo systemctl reboot
