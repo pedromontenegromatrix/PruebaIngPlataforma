@@ -38,3 +38,8 @@ variable "new_relic_region" {
   type    = string
   default = "US"
 }
+
+variable "new_relic_license_ec2" {
+  type    = string
+  default = ""
+}
