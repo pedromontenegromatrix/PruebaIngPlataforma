@@ -117,6 +117,22 @@ resource "newrelic_one_dashboard" "this" {
   }
 }
 
+resource "newrelic_workload" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider   = newrelic.newrelic
+  name       = "wl-${local.env}-${var.project}-NewRelicIntegration-01"
+  account_id = var.new_relic_account
+
+  entity_guids = [newrelic_one_dashboard.this[0].guid]
+
+  entity_search_query {
+    query = "name like '%NewRelicIntegration%'"
+  }
+
+  scope_account_ids = [var.new_relic_account]
+}
+
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
