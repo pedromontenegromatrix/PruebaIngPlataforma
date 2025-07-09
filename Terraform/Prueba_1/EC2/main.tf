@@ -121,6 +121,14 @@ resource "aws_iam_role_policy_attachment" "this" {
 }
 
 
+data "template_file" "archivo_host" {
+  template = file("scripts/bastion_host.sh")
+  vars = {
+    NEW_RELIC_LICENSE_KEY = var.new_relic_license_ec2
+    NEW_RELIC_APP_NAME    = "NEW_RELIC_APPLICATION"
+  }
+}
+
 resource "aws_instance" "this" {
   count = local.borrado ? 0 : local.cantidad_ec2
 
@@ -138,7 +146,8 @@ resource "aws_instance" "this" {
   }
 
   iam_instance_profile = aws_iam_instance_profile.this[0].name
-  user_data            = filebase64("scripts/bastion_host.sh")
+  #user_data            = filebase64("scripts/bastion_host.sh")
+  user_data_base64 = base64encode(data.template_file.archivo_host.rendered)
 
   tags = {
     Name = "asgr-${local.env}-${var.project}-${var.name}-0${count.index + 1}"

@@ -93,6 +93,30 @@ resource "newrelic_nrql_alert_condition" "this" {
   ]
 }
 
+resource "newrelic_one_dashboard" "this" {
+  count = local.borrado || var.new_relic_account == "" ? 0 : 1
+
+  provider    = newrelic.newrelic
+  name        = "dash-${local.env}-${var.project}-NewRelicIntegration-01"
+  permissions = "public_read_write"
+
+  page {
+    name = "DashBoard Instancias EC2"
+
+    widget_table {
+      title  = "Listado Instancias Estado"
+      row    = 1
+      column = 1
+      width  = 6
+      height = 3
+
+      nrql_query {
+        query = "SELECT provider.ec2InstanceId, provider.ec2State, provider.cpuCreditUsage.Maximum  FROM ComputeSample where provider.ec2InstanceType = 't3.micro'"
+      }
+    }
+  }
+}
+
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
