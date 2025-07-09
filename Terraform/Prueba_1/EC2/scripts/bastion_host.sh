@@ -66,8 +66,8 @@ curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2
 sudo dnf upgrade --releasever=2023.4.20240528 -y
 sudo grubby --set-default /boot/vmlinuz-6.1.91-99.172.amzn2023.x86_64
 
-curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
-newrelic install --licenseKey "${NEW_RELIC_LICENSE_KEY}" --appName "${NEW_RELIC_APP_NAME}"
+#curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
+#newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
 
 sudo yum install cronie -y
 
