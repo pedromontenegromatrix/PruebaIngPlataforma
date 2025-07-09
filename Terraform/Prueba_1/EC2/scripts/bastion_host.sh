@@ -71,7 +71,7 @@ sudo grubby --set-default /boot/vmlinuz-6.1.91-99.172.amzn2023.x86_64
 
 sudo yum install cronie -y
 
-cat << EOF > script_exec_cpu.sh
+cat << 'EOF' > script_exec_cpu.sh
 #!/bin/bash
 
 # Función que realiza cálculos intensivos
