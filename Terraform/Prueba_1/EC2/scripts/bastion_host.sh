@@ -45,7 +45,9 @@ sudo yum update screen -y
 # sudo yum update libxml2-python -y
 
 sudo yum install telnet -y
-
+echo "TERMINAR INSTALL TELNET"
+sudo yum install cronie -y
+echo "TERMINAR INSTALL CRON"
 
 wget https://archive.apache.org/dist/kafka/2.6.2/kafka_2.12-2.6.2.tgz
 tar -xzf kafka_2.12-2.6.2.tgz
@@ -66,11 +68,11 @@ curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2
 sudo dnf upgrade --releasever=2023.4.20240528 -y
 sudo grubby --set-default /boot/vmlinuz-6.1.91-99.172.amzn2023.x86_64
 
-#curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
-#newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
+echo "INSTALACION NEW RELIC"
+curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
+newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
 
-sudo yum install cronie -y
-
+echo "GENERACION BASH"
 cat << 'EOF' > script_exec_cpu.sh
 #!/bin/bash
 
@@ -103,6 +105,7 @@ pkill -f stress_cpu
 echo "Prueba de carga de CPU finalizada."
 EOF
 
+echo "CONFIGURACION CRON"
 echo "*15 * * * * script_exec_cpu.sh 4 60" | crontab -
 
 sudo systemctl reboot
