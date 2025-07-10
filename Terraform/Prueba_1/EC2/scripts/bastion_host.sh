@@ -106,6 +106,8 @@ echo "Prueba de carga de CPU finalizada."
 EOF
 
 echo "CONFIGURACION CRON"
+pwd
 echo "*15 * * * * script_exec_cpu.sh 4 60" | crontab -
+echo "FIN CONFIGURACION CRON"
 
 sudo systemctl reboot
