@@ -126,6 +126,8 @@ data "template_file" "archivo_host" {
   vars = {
     NEW_RELIC_LICENSE_KEY = var.new_relic_license_ec2
     NEW_RELIC_APP_NAME    = "NEW_RELIC_APPLICATION"
+    NEW_RELIC_API_KEY     = var.new_relic_api_key
+    NEW_RELIC_ACCOUNT_ID  = var.new_relic_account
   }
 }
 
