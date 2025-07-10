@@ -69,8 +69,9 @@ sudo dnf upgrade --releasever=2023.4.20240528 -y
 sudo grubby --set-default /boot/vmlinuz-6.1.91-99.172.amzn2023.x86_64
 
 echo "INSTALACION NEW RELIC"
-curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
-newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
+#curl -L https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
+#newrelic install --licenseKey $NEW_RELIC_LICENSE_KEY --appName "$NEW_RELIC_APP_NAME"
+curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash && sudo NEW_RELIC_API_KEY=$NEW_RELIC_API_KEY NEW_RELIC_ACCOUNT_ID=$NEW_RELIC_ACCOUNT_ID /usr/local/bin/newrelic install
 
 echo "GENERACION BASH"
 cat << 'EOF' > script_exec_cpu.sh
@@ -107,7 +108,9 @@ EOF
 
 echo "CONFIGURACION CRON"
 pwd
-echo "*15 * * * * script_exec_cpu.sh 4 60" | crontab -
+echo "*15 * * * * /script_exec_cpu.sh" | sudo crontab -
 echo "FIN CONFIGURACION CRON"
+sudo crontab -l
+echo "LIST CONFIGURACION CRON"
 
 sudo systemctl reboot
