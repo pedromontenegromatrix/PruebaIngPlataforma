@@ -84,9 +84,11 @@ function stress_cpu {
 }
 
 # Número de procesos a ejecutar en paralelo
+
 num_processes=4
 
 # Duración de la prueba (en segundos)
+
 duration=60
 
 # Iniciar los procesos en paralelo
