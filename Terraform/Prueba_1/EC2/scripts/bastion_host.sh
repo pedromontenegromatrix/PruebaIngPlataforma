@@ -108,7 +108,9 @@ EOF
 
 echo "CONFIGURACION CRON"
 pwd
-echo "*15 * * * * script_exec_cpu.sh 4 60" | crontab -
+echo "*15 * * * * /script_exec_cpu.sh" | sudo crontab -
 echo "FIN CONFIGURACION CRON"
+sudo crontab -l
+echo "LIST CONFIGURACION CRON"
 
 sudo systemctl reboot
