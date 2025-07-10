@@ -77,9 +77,9 @@ cat << EOF > script_exec_cpu.sh
 # Función que realiza cálculos intensivos
 function stress_cpu {
   while true; do
-    a=$((RANDOM * RANDOM))
-    b=$((a * a))
-    c=$((b / (a + 1)))
+    a=\$((RANDOM * RANDOM))
+    b=\$((a * a))
+    c=\$((b / (a + 1)))
   done
 }
 
