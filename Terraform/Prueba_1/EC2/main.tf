@@ -135,7 +135,7 @@ resource "aws_instance" "this" {
   count = local.borrado ? 0 : local.cantidad_ec2
 
   ami                         = local.bh_ami
-  instance_type               = "t3.micro"
+  instance_type               = "t2.medium" #"t3.micro"
   vpc_security_group_ids      = [aws_security_group.this[0].id]
   subnet_id                   = aws_subnet.this[0].id
   associate_public_ip_address = true
