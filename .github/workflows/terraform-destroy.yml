@@ -8,7 +8,7 @@ env:
   TF_CLOUD_ORGANIZATION: "${{ secrets.TF_CLOUD_ORGANIZATION }}"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   CONFIG_DIRECTORY: "./Terraform/Prueba_1/EC2"
-
+  IMAGE_TAG: ${{ github.ref_name }}
 
 jobs:
   terraform:
@@ -21,6 +21,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        
+      - name: Mensaje
+        run: echo "MENSAJE DEL DIA: ${{ env.IMAGE_TAG }}"
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
