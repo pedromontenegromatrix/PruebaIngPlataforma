@@ -113,7 +113,7 @@ echo "FIN CONFIGURACION CRON"
 sudo crontab -l
 echo "LIST CONFIGURACION CRON"
 
-sudo yum install git
+sudo yum install git -y
 
 sudo yum install -y docker
 sudo systemctl start docker
