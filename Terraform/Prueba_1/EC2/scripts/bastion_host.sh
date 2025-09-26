@@ -44,6 +44,9 @@ sudo yum update screen -y
 # sudo yum update libxml2 -y
 # sudo yum update libxml2-python -y
 
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
 sudo yum install telnet -y
 echo "TERMINAR INSTALL TELNET"
 sudo yum install cronie -y
